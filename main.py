@@ -428,7 +428,7 @@ ourTonic ={}
 # all_songs.remove('.ipynb_checkpoints')
 # all_songs.sort()
 # path = "/home/kodhandarama/Desktop/Raga/Code/Tonic_source_separation/{songname}/vocals.wav"
-f= open("/home/kodhandarama/Desktop/Raga/Code/compMusicDetails.json",)
+f= open("/home/kodhandarama/Desktop/Raga/Code/Audio_Analysis/compMusicDetails.json",)
 compMusicTonicDetails = json.load(f)
 f.close()
 # for i in all_songs:
@@ -437,22 +437,33 @@ with open("tempp.txt","a") as finished_file:
     finished_file.write(i+'\n')
 song_to_test = Audio(songPath)
 for j in compMusicTonicDetails:
-    try:
-        a=songPath.split('/home/kodhandarama/Desktop/Raga/Code/Tonic_source_separation/')[1]
+
+        print("Songname :",songPath)
+        a=songPath.split('/home/kodhandarama/Desktop/Raga/Code/Audio_Analysis/lolol')[1]
         song_name=a.split('/vocals.wav')[0]
         # print("song_name : ",song_name)
-
+        print(compMusicTonicDetails[j])
+        try:
         if compMusicTonicDetails[j]["songname"].split(".mp3")[0] == song_name:
-            ourTonic[j] = compMusicTonicDetails[j]
+            ourTonic[j] = compMusicTonicDetails
+            
+            
+            [j]
             ourTonic[j]["Our Tonic"] = song_to_test.tonic
-            json_object = json.dumps(ourTonic,indent = 4)
-            with open("/home/kodhandarama/Desktop/Raga/Code/Result1.json", "a") as out:
-                out.write(json_object) 
-        
-    except (KeyError, FileNotFoundError):
-        pass
+            # json_object = json.dumps(ourTonic,indent = 4)
+            
+
     # del song_to_test
-    gc.collect()
+
+gc.collect()
+out=open("Result4.json", "w")
+# filedata = json.load(out)
+# print(filedata)
+# filedata[song_name]=ourTonic
+# out.seek(0)
+# json.dump(filedata, out)
+json.dump(ourTonic,out)
+out.close()
 
 
 
