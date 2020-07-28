@@ -1,7 +1,6 @@
 import librosa
 import librosa.display
 from swipe import *
-# import swipe
 from scipy import signal
 import math
 from collections import defaultdict, OrderedDict
@@ -14,15 +13,13 @@ import parser
 import argparse
 
 
-parser = argparse.ArgumentParser(description='Paths to the song')
-parser.add_argument('--path', help='path')
+parser = argparse.ArgumentParser(description='song name')
+parser.add_argument('--song', help='song name')
 args = parser.parse_args()
 # print(args.path)
-songPath= args.path
+song= args.song
 
 
-
-plt.rcParams['figure.figsize'] = [20,5]
 # defining the class 
 # each object of this class is an audio clip that is to be analysed
 class Audio:
@@ -411,59 +408,35 @@ ratios = {'Sa0':1,'Ri1':16/15,'Ri2':9/8,'Ga2':6/5,'Ga3':5/4,'Ma1':4/3,'Ma2':17/1
           'Da2':5/3,'Ni2':9/5,'Ni3':15/8,'Sa2':2}
 all_normalized_notes = dict()
 for i,j in ratios.items():
-  all_normalized_notes[i] = 12*np.log2(j)
-  all_normalized_notes['l'+i] = 12*np.log2(0.5*j)
-  all_normalized_notes['h'+i] = 12*np.log2(2*j)
+	all_normalized_notes[i] = 12*np.log2(j)
+	all_normalized_notes['l'+i] = 12*np.log2(0.5*j)
+	all_normalized_notes['h'+i] = 12*np.log2(2*j)
 
 del all_normalized_notes['lSa2']
 del all_normalized_notes['hSa0']
 all_normalized_notes = OrderedDict(sorted(all_normalized_notes.items(),key=lambda kv: kv[1]))
 
-# rkm_kalyani=Audio('/home/kodhandarama/Desktop/Raga/Code/accompaniment.wav')
-
 
 ourTonic ={}
 
-# all_songs = os.listdir("/home/kodhandarama/Desktop/Raga/Code/Tonic_source_separation")
-# all_songs.remove('.ipynb_checkpoints')
-# all_songs.sort()
-# path = "/home/kodhandarama/Desktop/Raga/Code/Tonic_source_separation/{songname}/vocals.wav"
-f= open("/home/kodhandarama/Desktop/Raga/Code/Audio_Analysis/compMusicDetails.json",)
+f= open("compMusicDetails.json",)
 compMusicTonicDetails = json.load(f)
 f.close()
-# for i in all_songs:
-print("song ",os.path.basename(songPath))
+songPath = "/home/darth_kronos/Desktop/tonic/{}/vocals.wav"
+print("song ",songPath.format(song))
 with open("tempp.txt","a") as finished_file:
-    finished_file.write(i+'\n')
-song_to_test = Audio(songPath)
+	finished_file.write(song+'\n')
+song_to_test = Audio(songPath.format(song))
 for j in compMusicTonicDetails:
-
-        print("Songname :",songPath)
-        a=songPath.split('/home/kodhandarama/Desktop/Raga/Code/Audio_Analysis/lolol')[1]
-        song_name=a.split('/vocals.wav')[0]
-        # print("song_name : ",song_name)
-        print(compMusicTonicDetails[j])
-        try:
-        if compMusicTonicDetails[j]["songname"].split(".mp3")[0] == song_name:
-            ourTonic[j] = compMusicTonicDetails
-            
-            
-            [j]
-            ourTonic[j]["Our Tonic"] = song_to_test.tonic
-            # json_object = json.dumps(ourTonic,indent = 4)
-            
-
-    # del song_to_test
-
-gc.collect()
-out=open("Result4.json", "w")
-# filedata = json.load(out)
-# print(filedata)
-# filedata[song_name]=ourTonic
-# out.seek(0)
-# json.dump(filedata, out)
-json.dump(ourTonic,out)
-out.close()
+	try:
+		if compMusicTonicDetails[j]["songname"].split(".mp3")[0] == song:
+			ourTonic[j] = compMusicTonicDetails[j]
+			ourTonic[j]["Our Tonic"] = song_to_test.tonic
+			json_object = json.dumps(ourTonic,indent = 4)
+			with open("our_tonic_v04.json", "w") as out:
+				out.write(json_object)
+	except (KeyError, FileNotFoundError) as e:
+		pass
 
 
 
