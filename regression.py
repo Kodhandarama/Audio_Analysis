@@ -4,8 +4,10 @@ five_candidates=[]
 ten_candidates=[]
 not_working = []
 missed=0
+path = os.environ.get("tonic_dataset")
+
 # all_songs = os.listdir("/home/kodhandarama/Desktop/Raga/Code/Audio_Analysis/lolol")
-all_songs = os.listdir("/home/darth_kronos/Desktop/tonic/")
+all_songs = os.listdir(path)
 # all_songs.remove('.ipynb_checkpoints')
 all_songs.sort()
 for i in all_songs:

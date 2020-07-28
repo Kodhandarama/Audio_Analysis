@@ -18,7 +18,7 @@ parser.add_argument('--song', help='song name')
 args = parser.parse_args()
 # print(args.path)
 song= args.song
-
+path = os.environ.get("tonic_dataset")
 
 # defining the class 
 # each object of this class is an audio clip that is to be analysed
@@ -422,8 +422,8 @@ ourTonic ={}
 f= open("compMusicDetails.json",)
 compMusicTonicDetails = json.load(f)
 f.close()
-songPath = "/home/darth_kronos/Desktop/tonic/{}/vocals.wav"
-print("song ",songPath.format(song))
+songPath = path+"{}/vocals.wav"
+# print("song ",songPath.format(song))
 with open("tempp.txt","a") as finished_file:
 	finished_file.write(song+'\n')
 song_to_test = Audio(songPath.format(song))
@@ -432,14 +432,18 @@ for j in compMusicTonicDetails:
 		if compMusicTonicDetails[j]["songname"].split(".mp3")[0] == song:
 			ourTonic[j] = compMusicTonicDetails[j]
 			ourTonic[j]["Our Tonic"] = song_to_test.tonic
-			# json_object = json.dumps(ourTonic,indent = 4)
-			with open("our_tonic_v04.json", "w") as out:
-				temp = json.load(out)
-				temp.update(ourTonic)
-				out.write(temp)
+			try:
+				with open("our_tonic_v04.json", "r+") as out:
+					temp = json.load(out)
+					temp.update(ourTonic)
+					out.seek(0)
+					json.dump(temp,out,indent = 4)
+			except:
+				with open("our_tonic_v04.json", "w+") as out:
+					json_object = json.dumps(ourTonic,indent =4)
+					out.write(json_object)
 	except (KeyError, FileNotFoundError) as e:
 		pass
-
 
 
 
