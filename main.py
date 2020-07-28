@@ -432,9 +432,11 @@ for j in compMusicTonicDetails:
 		if compMusicTonicDetails[j]["songname"].split(".mp3")[0] == song:
 			ourTonic[j] = compMusicTonicDetails[j]
 			ourTonic[j]["Our Tonic"] = song_to_test.tonic
-			json_object = json.dumps(ourTonic,indent = 4)
+			# json_object = json.dumps(ourTonic,indent = 4)
 			with open("our_tonic_v04.json", "w") as out:
-				out.write(json_object)
+				temp = json.load(out)
+				temp.update(ourTonic)
+				out.write(temp)
 	except (KeyError, FileNotFoundError) as e:
 		pass
 
